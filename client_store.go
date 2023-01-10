@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"gopkg.in/oauth2.v3"
 	"gopkg.in/oauth2.v3/models"
 )
@@ -90,7 +91,7 @@ func (cs *ClientStore) GetByID(id string) (info oauth2.ClientInfo, err error) {
 	cs.cHandler(cs.ccfg.ClientsCName, func(c *mgo.Collection) {
 		entity := new(client)
 
-		if cerr := c.FindId(id).One(entity); cerr != nil {
+		if cerr := c.FindId(bson.ObjectIdHex(id)).One(entity); cerr != nil {
 			err = cerr
 			return
 		}
@@ -109,7 +110,7 @@ func (cs *ClientStore) GetByID(id string) (info oauth2.ClientInfo, err error) {
 // RemoveByID use the client id to delete the client information
 func (cs *ClientStore) RemoveByID(id string) (err error) {
 	cs.cHandler(cs.ccfg.ClientsCName, func(c *mgo.Collection) {
-		if cerr := c.RemoveId(id); cerr != nil {
+		if cerr := c.RemoveId(bson.ObjectIdHex(id)); cerr != nil {
 			err = cerr
 			return
 		}
