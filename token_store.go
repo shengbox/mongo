@@ -108,6 +108,7 @@ func (ts *TokenStore) Create(info oauth2.TokenInfo) (err error) {
 			err = c.Insert(basicData{
 				ID:        code,
 				Data:      jv,
+				UserID:    info.GetUserID(),
 				ExpiredAt: info.GetCodeCreateAt().Add(info.GetCodeExpiresIn()),
 			})
 		})
@@ -129,6 +130,7 @@ func (ts *TokenStore) Create(info oauth2.TokenInfo) (err error) {
 		Assert: txn.DocMissing,
 		Insert: basicData{
 			Data:      jv,
+			UserID:    info.GetUserID(),
 			ExpiredAt: rexp,
 		},
 	}, {
@@ -266,6 +268,7 @@ func (ts *TokenStore) GetByRefresh(refresh string) (ti oauth2.TokenInfo, err err
 type basicData struct {
 	ID        string    `bson:"_id"`
 	Data      []byte    `bson:"Data"`
+	UserID    string    `bson:"UserID"`
 	ExpiredAt time.Time `bson:"ExpiredAt"`
 }
 
