@@ -109,6 +109,7 @@ func (ts *TokenStore) Create(info oauth2.TokenInfo) (err error) {
 				ID:        code,
 				Data:      jv,
 				UserID:    info.GetUserID(),
+				ClientID:  info.GetClientID(),
 				ExpiredAt: info.GetCodeCreateAt().Add(info.GetCodeExpiresIn()),
 			})
 		})
@@ -131,6 +132,7 @@ func (ts *TokenStore) Create(info oauth2.TokenInfo) (err error) {
 		Insert: basicData{
 			Data:      jv,
 			UserID:    info.GetUserID(),
+			ClientID:  info.GetClientID(),
 			ExpiredAt: rexp,
 		},
 	}, {
@@ -269,6 +271,7 @@ type basicData struct {
 	ID        string    `bson:"_id"`
 	Data      []byte    `bson:"Data"`
 	UserID    string    `bson:"UserID"`
+	ClientID  string    `bson:"ClientID"`
 	ExpiredAt time.Time `bson:"ExpiredAt"`
 }
 
